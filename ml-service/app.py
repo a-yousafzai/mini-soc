@@ -4,7 +4,7 @@ from typing import Any, Dict
 
 import orjson
 import numpy as np
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import IsolationForest
 from elasticsearch import Elasticsearch
 from drain3 import TemplateMiner
 from drain3.file_persistence import FilePersistence
@@ -30,11 +30,12 @@ def make_es() -> Elasticsearch:
     return Elasticsearch(get_env("ELASTICSEARCH_URL", "http://elasticsearch:9200"))
 
 
-def load_model() -> LogisticRegression:
-    # Demo: a trivial trained model on fake data to keep the example self-contained.
-    X = np.array([[0], [1]])
-    y = np.array([0, 1])
-    model = LogisticRegression().fit(X, y)
+def load_model() -> IsolationForest:
+    # Demo IsolationForest trained on synthetic "normal" length scores
+    # Feature = combined length of name + message
+    baseline_lengths = np.array([[5], [8], [10], [12], [15], [18], [20]])
+    model = IsolationForest(n_estimators=100, contamination=0.05, random_state=42)
+    model.fit(baseline_lengths)
     return model
 
 
@@ -43,7 +44,7 @@ def featurize(event: Dict[str, Any]) -> np.ndarray:
     name = str(event.get("name", ""))
     message = str(event.get("message", ""))
     length_score = len(name) + len(message)
-    return np.array([[1 if length_score > 10 else 0]])
+    return np.array([[length_score]])
 
 
 def main() -> None:
@@ -90,9 +91,11 @@ def main() -> None:
             if text_payload is None:
                 text_payload = orjson.dumps(event).decode("utf-8") if event else ""
 
-            # Infer simple anomaly score with the trivial model
+            # Infer anomaly score with IsolationForest
             X = featurize(event)
-            score = float(model.predict_proba(X)[0][1])
+            # score_samples: higher -> more normal. We invert & clamp to [0,1]
+            raw = float(-model.score_samples(X)[0])
+            score = max(0.0, min(1.0, raw / 10.0))
 
             # Drain3 template mining
             result = drain.add_log_message(text_payload)
