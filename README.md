@@ -13,6 +13,12 @@ Services (all containerized):
 - ml-service-osquery: Kafka consumer (anomaly scoring demo) → `osquery-alerts`, templates in `osquery-templates`
 - ai-analyst: AI summarization service (LLM-backed or fallback) → `alerts-enriched`
 
+## Architecture
+
+![mini-soc architecture](docs/mini-soc-arch.png)
+
+Note: The editable scene is in `docs/test.excalidraw`. Export a PNG/SVG from Excalidraw to `docs/mini-soc-arch.png` if you update the diagram.
+
 Default flows in this repo:
 - osquery → filesystem logs → Logstash file input → Kafka (`osquery_logs`) → Logstash Kafka input → Elasticsearch (`osquery-*`) → Kibana
 - syslog (UDP/TCP 5514) → Logstash syslog (UDP)/tcp inputs → Kafka (`syslog_logs`) → Logstash Kafka input → Elasticsearch (`syslog-*`) → Kibana
