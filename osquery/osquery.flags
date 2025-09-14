@@ -1,0 +1,15 @@
+--config_path=/Users/abubakar.yousafzai/salesforce/mini-soc/osquery/osquery.conf
+--logger_plugin=filesystem
+--logger_path=/Users/abubakar.yousafzai/salesforce/mini-soc/osquery/logs
+--logger_rotate=true
+--logger_rotate_size=10485760
+--logger_rotate_max_files=5
+--logger_min_stderr=0
+--disable_distributed=true
+--disable_events=true
+--verbose=false
+--extensions_socket=/Users/abubakar.yousafzai/salesforce/mini-soc/osquery/osquery.em
+--database_path=/Users/abubakar.yousafzai/salesforce/mini-soc/osquery/osquery.db
+--pidfile=/Users/abubakar.yousafzai/salesforce/mini-soc/osquery/osquery.pid
+
+
