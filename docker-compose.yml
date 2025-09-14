@@ -99,6 +99,24 @@ services:
     volumes:
       - ./ml-service/state-osq:/app/state
 
+  ai-analyst:
+    build: ./ai-analyst
+    container_name: ai-analyst
+    environment:
+      - KAFKA_BOOTSTRAP=kafka:29092
+      - KAFKA_TOPIC=syslog-alerts
+      - KAFKA_GROUP_ID=ai-analyst
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - OUTPUT_INDEX=alerts-enriched
+      # Optional LLM settings; set OPENAI_API_KEY to enable real summaries
+      - OPENAI_BASE_URL=https://api.openai.com/v1
+      - OPENAI_MODEL=gpt-4o-mini
+      # OPENAI_API_KEY=your_api_key_here
+    depends_on:
+      - kafka
+      - elasticsearch
+    restart: unless-stopped
+
 volumes:
   elastic_data:
   

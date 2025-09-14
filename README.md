@@ -11,6 +11,7 @@ Services (all containerized):
 - Logstash: ingestion pipeline (file/syslog → Kafka → Elasticsearch)
 - ml-service (syslog): Kafka consumer with Drain3 template mining → `syslog-alerts`, templates in `syslog-templates`
 - ml-service-osquery: Kafka consumer (anomaly scoring demo) → `osquery-alerts`, templates in `osquery-templates`
+- ai-analyst: AI summarization service (LLM-backed or fallback) → `alerts-enriched`
 
 Default flows in this repo:
 - osquery → filesystem logs → Logstash file input → Kafka (`osquery_logs`) → Logstash Kafka input → Elasticsearch (`osquery-*`) → Kibana
@@ -19,6 +20,9 @@ Default flows in this repo:
 ML flows:
 - Kafka `osquery_logs` → ml-service-osquery → `osquery-alerts`
 - Kafka `syslog_logs` → ml-service (Drain3) → `syslog-alerts`; templates catalog in `syslog-templates`
+
+AI flow:
+- Kafka `syslog-alerts` → ai-analyst (LLM summarizer) → `alerts-enriched`
 
 Why this default? The macOS osquery build commonly installed locally does not include the Kafka logger plugin. This setup still gives you a Kafka hop without rebuilding osquery.
 
@@ -46,7 +50,7 @@ http://localhost:5601
 Create a Data View for `osquery-*` using `@timestamp` as the time field.
 
 Additionally, this repo provides data views for common indices (created via API in local dev):
-- `osquery-alerts`, `syslog-alerts`, `syslog-templates`, `osquery-templates`, and `syslog-*`/`osquery-*`.
+- `osquery-alerts`, `syslog-alerts`, `syslog-templates`, `osquery-templates`, `alerts-enriched`, and `syslog-*`/`osquery-*`.
 
 ### Repo layout
 
@@ -116,6 +120,29 @@ curl -s 'http://localhost:9200/_cat/indices/syslog-*?v'
 - Osquery alerts: `curl -s 'http://localhost:9200/osquery-alerts/_search?size=1&pretty'`
 - Syslog templates (Drain3): `curl -s 'http://localhost:9200/syslog-templates/_search?size=1&pretty'`
 - Osquery templates: `curl -s 'http://localhost:9200/osquery-templates/_search?size=1&pretty'`
+
+#### AI analyst (summaries)
+
+- Ensure `ai-analyst` is running:
+```bash
+docker compose up -d ai-analyst
+```
+
+- Send a syslog line (triggers syslog-alert and summarization):
+```bash
+printf "<134>Sep 14 12:14:00 mini-soc host app[999]: enrich test 2\n" | nc -u -w1 127.0.0.1 5514
+```
+
+- Check Kafka (optional):
+```bash
+docker exec -it kafka bash -lc "kafka-console-consumer --bootstrap-server localhost:9092 --topic syslog-alerts --from-beginning --max-messages 1"
+```
+
+- Verify enriched summaries:
+```bash
+curl -s 'http://localhost:9200/_cat/indices/alerts-enriched?v'
+curl -s 'http://localhost:9200/alerts-enriched/_search?size=1&pretty'
+```
 
 ### Switching to native osquery → Kafka (optional)
 
@@ -189,6 +216,70 @@ docker compose restart logstash
       - "5514:5514/udp"
 ```
   - If no docs appear, check Logstash logs and verify `syslog_logs` topic has messages.
+
+- Index or topic not found (first-run)
+  - Index 404s are normal until the first document is indexed. You can pre-create indices:
+```bash
+curl -s -X PUT 'http://localhost:9200/alerts-enriched' -H 'Content-Type: application/json' -d '{ "mappings": { "properties": { "@timestamp": { "type": "date" }}}}'
+```
+  - Pre-create Kafka topics if needed:
+```bash
+docker exec -it kafka bash -lc "kafka-topics --bootstrap-server localhost:9092 --create --topic syslog-alerts --partitions 1 --replication-factor 1 || true"
+```
+
+### Kafka topics and Elasticsearch indices
+
+- Topics:
+  - `osquery_logs` (raw osquery from Logstash)
+  - `syslog_logs` (raw syslog from Logstash)
+  - `syslog-alerts` (syslog alerts emitted by Logstash for AI)
+
+- Indices:
+  - `osquery-*` (raw osquery docs from Logstash)
+  - `syslog-*` (raw syslog docs from Logstash)
+  - `osquery-alerts` (ML alerts from ml-service-osquery)
+  - `syslog-alerts` (ML alerts from ml-service + Drain3)
+  - `osquery-templates`, `syslog-templates` (Drain3 templates)
+  - `alerts-enriched` (AI analyst summaries)
+
+### Environment variables (services)
+
+- ml-service (syslog):
+  - `KAFKA_BOOTSTRAP=kafka:29092`
+  - `KAFKA_TOPIC=syslog_logs`
+  - `KAFKA_GROUP_ID=ml-service-syslog`
+  - `ELASTICSEARCH_URL=http://elasticsearch:9200`
+  - `OUTPUT_INDEX=syslog-alerts`
+  - `DRAIN_INDEX=syslog-templates`
+  - `DRAIN_STATE_PATH=/app/state/drain_state.bin`
+
+- ml-service-osquery:
+  - `KAFKA_TOPIC=osquery_logs`
+  - `KAFKA_GROUP_ID=ml-service-osquery`
+  - `OUTPUT_INDEX=osquery-alerts`
+  - `DRAIN_INDEX=osquery-templates`
+  - `DRAIN_STATE_PATH=/app/state/drain_state_osq.bin`
+
+- ai-analyst:
+  - `KAFKA_TOPIC=syslog-alerts`
+  - `KAFKA_GROUP_ID=ai-analyst`
+  - `OUTPUT_INDEX=alerts-enriched`
+  - Optional LLM config:
+    - `OPENAI_BASE_URL=https://api.openai.com/v1`
+    - `OPENAI_MODEL=gpt-4o-mini`
+    - `OPENAI_API_KEY=your_key`
+
+### Notes on osquery
+
+- Run from the repo root so relative paths in `osquery/osquery.flags` resolve:
+```bash
+cd mini-soc
+/opt/osquery/lib/osquery.app/Contents/MacOS/osqueryd \
+  --flagfile ./osquery/osquery.flags \
+  --ephemeral --disable_watchdog --verbose=false
+```
+
+- For native Kafka output from osquery (optional), see section above and ensure your osquery build has the Kafka logger plugin.
 
 ### Common commands
 
