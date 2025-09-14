@@ -45,6 +45,8 @@ services:
       - ./osquery/logs/:/var/osquery/logs/
     ports:
       - "5044:5044"
+      - "5514:5514"
+      - "5514:5514/udp"
     environment:
       - xpack.monitoring.enabled=false
     depends_on:
@@ -66,14 +68,36 @@ services:
     container_name: ml-service
     environment:
       - KAFKA_BOOTSTRAP=kafka:29092
-      - KAFKA_TOPIC=osquery_logs
-      - KAFKA_GROUP_ID=ml-service
+      - KAFKA_TOPIC=syslog_logs
+      - KAFKA_GROUP_ID=ml-service-syslog
       - ELASTICSEARCH_URL=http://elasticsearch:9200
-      - OUTPUT_INDEX=osquery-alerts
+      - OUTPUT_INDEX=syslog-alerts
+      - DRAIN_INDEX=syslog-templates
+      - DRAIN_STATE_PATH=/app/state/drain_state.bin
     depends_on:
       - kafka
       - elasticsearch
     restart: unless-stopped
+    volumes:
+      - ./ml-service/state:/app/state
+
+  ml-service-osquery:
+    build: ./ml-service
+    container_name: ml-service-osquery
+    environment:
+      - KAFKA_BOOTSTRAP=kafka:29092
+      - KAFKA_TOPIC=osquery_logs
+      - KAFKA_GROUP_ID=ml-service-osquery
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - OUTPUT_INDEX=osquery-alerts
+      - DRAIN_INDEX=osquery-templates
+      - DRAIN_STATE_PATH=/app/state/drain_state_osq.bin
+    depends_on:
+      - kafka
+      - elasticsearch
+    restart: unless-stopped
+    volumes:
+      - ./ml-service/state-osq:/app/state
 
 volumes:
   elastic_data:

@@ -5,13 +5,20 @@ A minimal, self-contained Security Operations Center (SOC) stack you can run loc
 ### Overview
 
 Services (all containerized):
-- Zookeeper + Kafka: message bus (`osquery_logs` topic)
+- Zookeeper + Kafka: message bus (`osquery_logs`, `syslog_logs`)
 - Elasticsearch: storage and search
 - Kibana: UI for exploring data
-- Logstash: ingestion pipeline (file → Kafka → Elasticsearch)
+- Logstash: ingestion pipeline (file/syslog → Kafka → Elasticsearch)
+- ml-service (syslog): Kafka consumer with Drain3 template mining → `syslog-alerts`, templates in `syslog-templates`
+- ml-service-osquery: Kafka consumer (anomaly scoring demo) → `osquery-alerts`, templates in `osquery-templates`
 
-Default flow in this repo:
-- osquery → filesystem logs → Logstash file input → Kafka (`osquery_logs`) → Logstash Kafka input → Elasticsearch → Kibana
+Default flows in this repo:
+- osquery → filesystem logs → Logstash file input → Kafka (`osquery_logs`) → Logstash Kafka input → Elasticsearch (`osquery-*`) → Kibana
+- syslog (UDP/TCP 5514) → Logstash syslog (UDP)/tcp inputs → Kafka (`syslog_logs`) → Logstash Kafka input → Elasticsearch (`syslog-*`) → Kibana
+
+ML flows:
+- Kafka `osquery_logs` → ml-service-osquery → `osquery-alerts`
+- Kafka `syslog_logs` → ml-service (Drain3) → `syslog-alerts`; templates catalog in `syslog-templates`
 
 Why this default? The macOS osquery build commonly installed locally does not include the Kafka logger plugin. This setup still gives you a Kafka hop without rebuilding osquery.
 
@@ -37,6 +44,9 @@ curl -s 'http://localhost:9200/_cluster/health?pretty'
 http://localhost:5601
 ```
 Create a Data View for `osquery-*` using `@timestamp` as the time field.
+
+Additionally, this repo provides data views for common indices (created via API in local dev):
+- `osquery-alerts`, `syslog-alerts`, `syslog-templates`, `osquery-templates`, and `syslog-*`/`osquery-*`.
 
 ### Repo layout
 
@@ -86,6 +96,26 @@ docker exec -it kafka bash -lc \
 ```
 
 You should see JSON lines similar to the osquery snapshot events.
+
+#### Syslog quick test
+
+- Send a UDP syslog line from host (macOS/Linux):
+```bash
+printf "<134>Sep 14 12:00:00 mini-soc host app[123]: syslog test\n" | nc -u -w1 127.0.0.1 5514
+```
+
+- Verify Kafka and Elasticsearch:
+```bash
+docker exec -it kafka bash -lc "kafka-console-consumer --bootstrap-server localhost:9092 --topic syslog_logs --from-beginning --max-messages 1"
+curl -s 'http://localhost:9200/_cat/indices/syslog-*?v'
+```
+
+#### ML alerts and templates
+
+- Syslog alerts: `curl -s 'http://localhost:9200/syslog-alerts/_search?size=1&pretty'`
+- Osquery alerts: `curl -s 'http://localhost:9200/osquery-alerts/_search?size=1&pretty'`
+- Syslog templates (Drain3): `curl -s 'http://localhost:9200/syslog-templates/_search?size=1&pretty'`
+- Osquery templates: `curl -s 'http://localhost:9200/osquery-templates/_search?size=1&pretty'`
 
 ### Switching to native osquery → Kafka (optional)
 
@@ -149,6 +179,16 @@ docker compose restart logstash
 
 - Kafka connectivity
   - The broker is reachable inside the Docker network as `kafka:29092` and from your host as `localhost:9092`.
+
+- Syslog input
+  - Ensure ports are exposed in `docker-compose.yml` for Logstash:
+```yaml
+  logstash:
+    ports:
+      - "5514:5514"
+      - "5514:5514/udp"
+```
+  - If no docs appear, check Logstash logs and verify `syslog_logs` topic has messages.
 
 ### Common commands
 

@@ -3,4 +3,5 @@ elasticsearch==8.12.1
 orjson==3.10.7
 numpy==1.26.4
 scikit-learn==1.4.2
+drain3==0.9.10
 

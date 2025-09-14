@@ -6,6 +6,8 @@ import orjson
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from elasticsearch import Elasticsearch
+from drain3 import TemplateMiner
+from drain3.file_persistence import FilePersistence
 
 from confluent_kafka import Consumer, KafkaException
 
@@ -47,10 +49,17 @@ def featurize(event: Dict[str, Any]) -> np.ndarray:
 def main() -> None:
     topic = get_env("KAFKA_TOPIC", "osquery_logs")
     out_index = get_env("OUTPUT_INDEX", "osquery-alerts")
+    drain_index = get_env("DRAIN_INDEX", "syslog-templates")
+    drain_state_path = get_env("DRAIN_STATE_PATH", "/app/state/drain_state.bin")
 
     consumer = make_consumer()
     es = make_es()
     model = load_model()
+
+    # Initialize Drain3 for template mining (use default config)
+    os.makedirs(os.path.dirname(drain_state_path), exist_ok=True)
+    persistence = FilePersistence(drain_state_path)
+    drain = TemplateMiner(persistence)
 
     consumer.subscribe([topic])
 
@@ -64,22 +73,71 @@ def main() -> None:
             if msg.error():
                 raise KafkaException(msg.error())
 
+            raw = msg.value()
+            text_payload = None
+            event: Dict[str, Any] = {}
             try:
-                event = orjson.loads(msg.value())
+                event = orjson.loads(raw)
+                source = event
+                # If this looks like a syslog wrapper from Logstash plain codec
+                if isinstance(source.get("message"), str) and source.get("pipeline") == "from_syslog":
+                    text_payload = source.get("message")
             except Exception:
-                # Skip non-JSON payloads
-                continue
+                # Non-JSON, treat as plain text (e.g., raw syslog)
+                text_payload = raw.decode("utf-8", errors="replace")
+
+            # Fallback: stringify the event for template mining
+            if text_payload is None:
+                text_payload = orjson.dumps(event).decode("utf-8") if event else ""
 
             # Infer simple anomaly score with the trivial model
             X = featurize(event)
             score = float(model.predict_proba(X)[0][1])
 
+            # Drain3 template mining
+            result = drain.add_log_message(text_payload)
+            cluster_id = None
+            template = None
+            params = []
+            if result:
+                # Drain3 may return an object or a dict depending on version/config
+                if isinstance(result, dict):
+                    cluster_id = result.get("cluster_id")
+                    cluster = result.get("cluster")
+                    if cluster is not None and hasattr(cluster, "get_template"):
+                        template = cluster.get_template()
+                        try:
+                            params = cluster.get_parameter_list(text_payload) or []
+                        except Exception:
+                            params = []
+                    else:
+                        template = (
+                            result.get("log_template_mined")
+                            or result.get("template_mined")
+                            or result.get("template")
+                        )
+                        params = result.get("parameter_list") or []
+                else:
+                    # Object-like API
+                    cluster_id = getattr(result, "cluster_id", None)
+                    if hasattr(result, "get_template"):
+                        template = result.get_template()
+                    try:
+                        params = result.get_parameter_list(text_payload) or []
+                    except Exception:
+                        params = []
+
+            # Index alert with template metadata
             doc = {
                 "@timestamp": event.get("@timestamp", None),
                 "source": "ml-service",
-                "source_event_json": orjson.dumps(event).decode("utf-8"),
+                "source_event_json": orjson.dumps(event).decode("utf-8") if event else None,
+                "raw_text": text_payload,
                 "anomaly_score": score,
                 "rule": "length-heuristic",
+                "template_id": cluster_id,
+                "template": template,
+                "template_params": params,
             }
 
             try:
@@ -87,6 +145,17 @@ def main() -> None:
             except Exception as e:
                 print(f"[ml-service] index error: {e}")
                 time.sleep(0.5)
+
+            # Store/update template catalog
+            if cluster_id and template:
+                try:
+                    es.index(index=drain_index, id=str(cluster_id), document={
+                        "template_id": cluster_id,
+                        "template": template,
+                        "last_seen": event.get("@timestamp", None),
+                    })
+                except Exception as e:
+                    print(f"[ml-service] template index error: {e}")
     except KeyboardInterrupt:
         pass
     finally:
