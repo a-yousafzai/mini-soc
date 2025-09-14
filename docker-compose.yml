@@ -61,6 +61,20 @@ services:
     depends_on:
       - elasticsearch
 
+  ml-service:
+    build: ./ml-service
+    container_name: ml-service
+    environment:
+      - KAFKA_BOOTSTRAP=kafka:29092
+      - KAFKA_TOPIC=osquery_logs
+      - KAFKA_GROUP_ID=ml-service
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - OUTPUT_INDEX=osquery-alerts
+    depends_on:
+      - kafka
+      - elasticsearch
+    restart: unless-stopped
+
 volumes:
   elastic_data:
   
