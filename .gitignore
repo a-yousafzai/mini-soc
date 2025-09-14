@@ -1,0 +1,15 @@
+# Runtime logs and artifacts
+osquery/logs/
+osquery/osquery.db
+osquery/osquery.em
+osquery/osquery.pid
+
+# Docker volumes and data
+**/dead_letter_queue/
+**/queue/
+**/sincedb-*
+
+# macOS
+.DS_Store
+
+
