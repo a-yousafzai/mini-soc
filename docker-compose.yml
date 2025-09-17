@@ -100,7 +100,7 @@ services:
       - ./ml-service/state-osq:/app/state
 
   ai-analyst:
-    build: ./ai-analyst
+    build: ./ai_analyst
     container_name: ai-analyst
     environment:
       - KAFKA_BOOTSTRAP=kafka:29092
@@ -116,6 +116,8 @@ services:
       - kafka
       - elasticsearch
     restart: unless-stopped
+    ports:
+      - "8080:8080"
 
 volumes:
   elastic_data:

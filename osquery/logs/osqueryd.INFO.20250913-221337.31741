@@ -11022,3 +11022,91 @@ I0914 12:24:59.331418 1866706944 scheduler.cpp:120] Executing scheduled query sy
 I0914 12:25:01.337379 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
 I0914 12:25:06.350705 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
 I0914 12:25:08.357010 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:25:11.365993 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:25:16.386197 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:25:17.391495 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:25:21.406956 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:25:26.433614 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:25:26.434696 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:25:31.454656 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:25:35.471470 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:25:36.477442 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:25:41.493798 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:25:44.503491 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:25:46.513873 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:25:51.533768 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:25:53.540668 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:25:56.553757 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:26:01.575253 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:26:02.581207 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:26:06.599378 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:26:11.623238 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:26:11.627031 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:26:16.640002 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:26:20.657414 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:26:21.662166 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:26:26.683140 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:26:29.697261 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:26:31.702972 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:26:36.721493 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:26:38.728917 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:26:41.740036 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:26:46.765900 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:26:47.767618 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:26:51.782276 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:26:56.803391 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:26:56.805783 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:27:01.819228 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:27:05.834748 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:27:06.839956 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:27:11.858196 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:27:14.864959 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:27:16.876994 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:27:21.900025 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:27:23.910436 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:27:26.921382 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:27:31.942356 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:27:32.947520 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:27:36.964155 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:27:41.984035 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:27:41.987646 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:27:47.002904 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:27:51.014817 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:27:52.019001 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:27:57.038921 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:28:00.047816 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:28:02.052047 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:28:07.068058 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:28:09.075333 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:28:12.085541 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:28:17.099838 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:28:18.103457 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:28:22.116019 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:28:27.135555 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:28:27.139694 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:28:32.150126 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:28:36.162983 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:28:37.168871 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:28:42.187115 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:28:45.198890 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:28:47.209075 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:28:52.225553 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:28:54.232553 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:28:57.247030 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:29:02.270160 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:29:03.274078 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:29:07.295120 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:29:12.509694 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:29:12.511670 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:29:17.527984 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:29:21.550710 1866706944 scheduler.cpp:120] Executing scheduled query system_info: SELECT hostname, cpu_brand, physical_memory FROM system_info;
+I0914 12:29:22.555280 1866706944 scheduler.cpp:120] Executing scheduled query osquery_info: SELECT version, build_platform, build_distro FROM osquery_info;
+I0914 12:29:23.525216 -238919488 dispatcher.cpp:149] Thread: 0x1f1c260c0 requesting a stop
+I0914 12:29:23.531528 -238919488 dispatcher.cpp:156] Service: 0x13b9240f8 has been interrupted
+I0914 12:29:23.532894 -238919488 dispatcher.cpp:156] Service: 0x13b9246d8 has been interrupted
+I0914 12:29:23.533057 -238919488 dispatcher.cpp:156] Service: 0x13ba29d08 has been interrupted
+I0914 12:29:23.533174 -238919488 dispatcher.cpp:122] Thread: 0x1f1c260c0 requesting a join
+I0914 12:29:23.536561 -238919488 dispatcher.cpp:140] Service thread: 0x13ba27ba0 has joined
+I0914 12:29:23.541437 -238919488 dispatcher.cpp:140] Service thread: 0x13b922700 has joined
+I0914 12:29:23.541649 -238919488 dispatcher.cpp:140] Service thread: 0x13b920180 has joined
+I0914 12:29:23.541797 -238919488 dispatcher.cpp:144] Services and threads have been cleared
