@@ -221,8 +221,16 @@ def analyze(req: AnalyzeRequest) -> dict:
 
 
 def main() -> None:
-    t = threading.Thread(target=run_consumer_loop, name="alerts-consumer", daemon=True)
-    t.start()
+    run_mode = (env("RUN_MODE", "api") or "api").lower()
+    if run_mode == "consumer":
+        # Run only the Kafka consumer loop (no API)
+        run_consumer_loop()
+        return
+    if run_mode == "both":
+        # Start consumer in background and serve API
+        t = threading.Thread(target=run_consumer_loop, name="alerts-consumer", daemon=True)
+        t.start()
+    # Default: API only
     try:
         import uvicorn
         host = env("API_HOST", "0.0.0.0")
