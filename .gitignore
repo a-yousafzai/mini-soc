@@ -13,3 +13,7 @@ osquery/osquery.pid
 .DS_Store
 
 
+osquery/logs/
+osquery/osquery.db/
+*.log
+
