@@ -13,3 +13,24 @@ osquery/osquery.pid
 .DS_Store
 
 
+osquery/logs/
+osquery/osquery.db/
+*.log
+
+
+ml-service/state/
+ml-service/state-osq/
+
+# Python virtualenv
+.venv/
+**/.venv/
+__pycache__/
+**/__pycache__/
+.pytest_cache/
+**/.pytest_cache/
+
+# Bytecode caches
+__pycache__/
+**/__pycache__/
+.pytest_cache/
+**/.pytest_cache/

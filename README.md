@@ -17,7 +17,6 @@ Services (all containerized):
 
 ![mini-soc architecture](docs/mini-soc-arch.png)
 
-Note: The editable scene is in `docs/test.excalidraw`. Export a PNG/SVG from Excalidraw to `docs/mini-soc-arch.png` if you update the diagram.
 
 Default flows in this repo:
 - osquery → filesystem logs → Logstash file input → Kafka (`osquery_logs`) → Logstash Kafka input → Elasticsearch (`osquery-*`) → Kibana
