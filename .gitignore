@@ -17,3 +17,6 @@ osquery/logs/
 osquery/osquery.db/
 *.log
 
+
+ml-service/state/
+ml-service/state-osq/
